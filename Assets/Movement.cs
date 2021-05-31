@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    float movX = 5;
-    float movY = 8;
+    public CharacterController2D controller;
+
+    public float runSpeed = 40f;
+
+    float horizontalMove = 0f;
+
+    bool jump = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,9 +21,18 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizon = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
-        transform.position = transform.position + new Vector3(horizon * movX * Time.deltaTime, vertical * movY * Time.deltaTime, 0);
+        if(Input.GetButtonDown("Jump"))
+        {
+            jump = true;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        //Move the character
+        controller.Move(horizontalMove * Time.fixedDeltaTime, false, jump);
+        jump = false;
     }
 }
